@@ -1,0 +1,39 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const bookButtons = document.querySelectorAll('.book-button');
+    const bookingFormSection = document.getElementById('booking-form-section');
+    const bookingForm = document.getElementById('bookingForm');
+    const confirmationDiv = document.getElementById('confirmation');
+    const confirmationMessage = document.getElementById('confirmation-message');
+
+    bookButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const property = this.closest('.property');
+            const propertyId = property.getAttribute('data-id');
+            bookingFormSection.classList.remove('hidden');
+            bookingForm['propertyId'].value = propertyId;
+            window.scrollTo(0, bookingFormSection.offsetTop);
+        });
+    });
+
+    bookingForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const name = bookingForm['name'].value;
+        const email = bookingForm['email'].value;
+        const startDate = bookingForm['startDate'].value;
+        const duration = bookingForm['duration'].value;
+        const propertyId = bookingForm['propertyId'].value;
+        const propertyName = document.querySelector(`.property[data-id="${propertyId}"] h3`).textContent;
+
+        confirmationMessage.innerHTML = `
+            <p>Thank you, ${name}! Your booking for <strong>${propertyName}</strong> has been confirmed.</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Start Date:</strong> ${startDate}</p>
+            <p><strong>Duration:</strong> ${duration} months</p>
+        `;
+
+        bookingFormSection.classList.add('hidden');
+        confirmationDiv.classList.remove('hidden');
+        bookingForm.reset();
+    });
+});
